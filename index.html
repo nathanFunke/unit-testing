@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="googlebot" content="noindex, nofollow">
+    <title>Unit Text Example</title>
+    <link rel="stylesheet" type="text/css" href="js/result-light.css">
+    <script type="text/javascript" src="jasmine/jasmine-all-min.js"></script>
+    <script type="text/javascript">//<![CDATA[
+        window.onload=function(){
+        //---------------------------- CODE ----------------------------    
+
+        // sorts an array of numbers by largest number to smallest
+        function organizeArray (arrayInput) {
+        	return arrayInput.sort(function (a, b) {
+          		return b - a;
+          });
+        }
+
+        // determines which number is the largest number in an array of numbers
+        function findLargestNumber (arrayInput) {
+        	return arrayInput.sort(function (a, b) {
+          		return b - a;
+          })[0];
+        }
+
+        //checks in a number is even
+        function checkIfEven (num) {
+        	if (num % 2 == 0) {
+          	return true;
+          } else {
+          	return false;
+          }
+        }
+
+        // checks if all the numbers in an array are even
+        function checkArrayForEvens (arrayInput) {
+        	for (var i = 0; i < arrayInput.length; i++) {
+          	if (checkIfEven(arrayInput[i]) == true) {
+            	return true;
+            }
+          }
+          return false;
+        }
+
+        // determines the starting and incromental number used for finding smallest multiple
+        function findStartNumber (arrayInput) {
+        	if (checkArrayForEvens(arrayInput) == true) {
+          	if (checkIfEven(findLargestNumber(arrayInput)) == true) {
+              return findLargestNumber(arrayInput);
+            } else {
+              return findLargestNumber(arrayInput) * 2;
+            }
+          } else {
+          	return findLargestNumber(arrayInput);
+          }
+        }
+
+        // checks if a number is a multiple of another number
+        function checkifMultiple (possibleMultipe, numberToCheckAganst) {
+        	if (numberToCheckAganst % possibleMultipe == 0) {
+          	return true;
+          } else {
+          	return false;
+          }
+        }
+
+        //checks if each number in an array of numbers is a multiple of another number
+        function checkArrayForMultiples (arrayInput, numberToCheckAganst) {
+        	if (arrayInput.length != 0) { 
+            for (var i = 0; i < arrayInput.length; i++) {
+              if (checkifMultiple(arrayInput[i], numberToCheckAganst) == false) {
+                return false;
+              }
+            }
+            return true;
+          } else {
+          	return false;
+          }
+        }
+
+        //finds the smallest number an array of numbers are all multiples of
+        function findSmallestMultiple (arrayInput) {
+        	var startNumber     = findStartNumber(arrayInput);
+          var currentNumber   = startNumber;
+          var isSmallestPrime = false;
+          
+          if (arrayInput.length != 0) {
+            while (isSmallestPrime == false) {
+              if (checkArrayForMultiples(arrayInput, currentNumber) == true) {
+                isSmallestPrime = true;
+                return currentNumber;
+              } else {
+                currentNumber = currentNumber + startNumber;
+              }
+            }
+          } else {
+          	return;
+          }
+        }
+
+        //---------------------------- tests ----------------------------
+        describe("Test for Function that finds the smallest multiple", function() {
+
+            describe("canary test", function() {
+                it("should always pass", function(){
+                    expect(true).toEqual(true);
+                });
+            });
+          
+            describe("organizeArray()", function() {
+                var testArray1 = [2, 1, 9, 4, 3, 7, 8, 5, 0, 10, 6];
+                var testArray2 = [2, 1, 9, 4, 3, 7, 8, 5, 0, 10, 6];
+                var endArray   = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+                var badArray   = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+          
+                it("should organize an array of numbers from greatest to smallest", function(){
+                    expect(organizeArray(testArray1)).toEqual(endArray);
+                });
+          
+                it("should not organize an array of numbers from smallest to greatest", function(){
+                    expect(organizeArray(testArray1)).not.toEqual(badArray);
+                });
+          
+                it("should not keep the array same order", function(){
+                    expect(organizeArray(testArray1)).not.toEqual(testArray2);
+                });
+            });
+
+            describe("findLargestNumber()", function() {
+                var testArray1 = [2, 1, 9, 4, 3, 7, 8, 5, 0, 10, 6];
+                var testArray2 = [-2, -1, -9, -4, -3, -7, -8, -5, 0, -10, -6];
+                var testArray3 = [];
+          
+                it("should find the largest number in array", function(){
+                    expect(findLargestNumber(testArray1)).toEqual(10);
+                });
+          
+                it("should be able to handle negative numbers", function(){
+                    expect(findLargestNumber(testArray2)).toEqual(0);
+                }); 
+
+                it("should be undefined if the array is empty", function(){
+                    expect(findLargestNumber(testArray3)).toBeUndefined();
+                });
+            });
+
+            describe("checkIfEven()", function() { 
+                it("should return true if the parameter entered is even, and false if odd.", function(){
+                    expect(checkIfEven(4)).toEqual(true);
+                    expect(checkIfEven(3)).toEqual(false);
+                });
+            });
+
+            describe("checkArrayForEvens()", function() { 
+                var testArray1 = [1, 3, 5, 7, 10];
+                var testArray2 = [1, 3, 5, 7, 11];
+                var testArray3 = [];
+            
+                it("should return true if array contains an even number", function(){
+                    expect(checkArrayForEvens(testArray1)).toEqual(true);
+                    expect(checkArrayForEvens(testArray1)).not.toEqual(false);
+                });
+
+                it("should return false if array only contains odd numbers", function(){
+                    expect(checkArrayForEvens(testArray2)).toEqual(false);
+                    expect(checkArrayForEvens(testArray2)).not.toEqual(true);
+                });
+
+                it("should return false if array contains no numbers", function(){
+                    expect(checkArrayForEvens(testArray3)).toEqual(false);
+                });
+            });
+
+            describe("findStartNumber()", function() {
+                var testArray1 = [1, 3, 5, 7, 11];
+                var testArray2 = [1, 3, 5, 7, 10];
+                var testArray3 = [1, 2, 5, 7, 11];
+                var testArray4 = [];
+          
+                it("should return the largest number if there is no evens", function(){
+                    expect(findStartNumber(testArray1)).toEqual(11);
+                });
+          
+                it("should return the largest number if the the largest number is even", function(){
+                    expect(findStartNumber(testArray2)).toEqual(10);
+                });
+          
+                it("should return twice the largest number if there are evens but the largest number is odd", function(){
+                    expect(findStartNumber(testArray3)).toEqual(22);
+                });
+          
+                it("should be undefined if the array is empty", function(){
+                    expect(findStartNumber(testArray4)).toBeUndefined();
+                });
+            });
+
+            describe("checkifMultiple()", function() { 
+                it("should return true if the first number parameter divides evenly into the second number parameter", function(){
+                    expect(checkIfEven(2, 16)).toEqual(true);
+                });
+            
+                it("should return false if the first number parameter does not divides evenly into the second number parameter", function(){
+                    expect(checkIfEven(3, 16)).toEqual(false);
+                });
+            });
+
+            describe("checkArrayForMultiples()", function() { 
+                var testArray1 = [1, 2, 5, 10];
+                var testArray2 = [];
+            
+                it("should return true if all numbers in array are multiples of second parameter", function(){
+                    expect(checkArrayForMultiples(testArray1, 10)).toEqual(true);
+                });
+            
+                it("should not return false if all numbers in array are not multiples of second parameter", function(){
+                    expect(checkArrayForMultiples(testArray1, 11)).not.toEqual(true);
+                });
+            
+                it("should return false if array contains no numbers", function(){
+                    expect(checkArrayForMultiples(testArray2)).toEqual(false);
+                });
+            });
+          
+            describe("findSmallestMultiple()", function() {
+                var testArray1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+                var testArray2 = [1, 5, 10];
+                var testArray3 = [1, 5, 15];
+                var testArray4 = []
+          
+                it("should return 2520 for the smallest number divisible between 1 - 10", function(){
+                    expect(findSmallestMultiple(testArray1)).toEqual(2520);
+                });
+            
+                it("should should return 10 for the smallest numbers divisible by 1, 5, 10", function(){
+                    expect(findSmallestMultiple(testArray2)).toEqual(10);
+                });
+            
+                it("should should return 15 for the smallest numbers divisible by 1, 5, 15", function(){
+                    expect(findSmallestMultiple(testArray3)).toEqual(15);
+                });
+          
+                it("should be undefined if the array is empty", function(){
+                    expect(findSmallestMultiple(testArray4)).toBeUndefined();
+                });
+            });
+        });
+        }
+    </script>
+
+  
+</head>
+
+<body>
+    In this example my goal is to show an example of some of the unit testing I have done by using a script I wrote to solve question #5 from the <b><a href="https://projecteuler.net/problem=5" >Project Euler website</a></b>. The original question goes as follows;
+    <br><br>
+     <i>"2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder. What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?</i>
+     <br><br>
+     I first wrote the unit tests in Jasmine to cover the functionality I would need based off of the sudo code outline I created for the script. I then wrote the functions to handle any sequence of numbers given to them by a user instead of the set defined in the question.
+    <br><br><br>
+    <b>Below is a print out of the Unit test results.</b>
+
+      <br>
+      <script>
+      // tell the embed parent frame the height of the content
+      if (window.parent && window.parent.parent){
+        window.parent.parent.postMessage(["resultsFrame", {
+          height: document.body.getBoundingClientRect().height,
+          slug: "9pehs0x7"
+        }], "*")
+      }
+    </script>
+</body>
+</html>
